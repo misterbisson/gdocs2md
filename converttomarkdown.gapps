@@ -81,7 +81,7 @@ function ConvertToMarkdown() {
   MailApp.sendEmail(Session.getActiveUser().getEmail(), 
                     "[MARKDOWN_MAKER] "+DocumentApp.getActiveDocument().getName(), 
                     "Your converted document is attached as both a Markdown and PDF file"+
-                    "\n\nThese documents were converted from "+DocumentApp.getActiveDocument().getUrl()+")"+
+                    "\n\nThese documents were converted from "+DocumentApp.getActiveDocument().getUrl()+
                     "\n\nDon't know how to use the format options? See http://github.com/mangini/gdocs2md\n\n",
                     { "attachments": attachments });
 }
