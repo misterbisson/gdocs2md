@@ -71,12 +71,18 @@ function ConvertToMarkdown() {
       
   }
   
-  attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".md", "mimeType": "text/plain", "content": text});
+  // attach as both markdown and PDF
+  attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".md",
+                    "mimeType": "text/plain", "content": text});
+  attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".pdf",
+                    "mimeType": "application/pdf",
+                    "content": DocumentApp.getActiveDocument().getAs('application/pdf').getBytes()});
   
   MailApp.sendEmail(Session.getActiveUser().getEmail(), 
                     "[MARKDOWN_MAKER] "+DocumentApp.getActiveDocument().getName(), 
-                    "Your converted markdown document is attached (converted from "+DocumentApp.getActiveDocument().getUrl()+")"+
-                    "\n\nDon't know how to use the format options? See http://github.com/mangini/gdocs2md\n",
+                    "Your converted document is attached as both a Markdown and PDF file"+
+                    "\n\nThese documents were converted from "+DocumentApp.getActiveDocument().getUrl()+")"+
+                    "\n\nDon't know how to use the format options? See http://github.com/mangini/gdocs2md\n\n",
                     { "attachments": attachments });
 }
 
