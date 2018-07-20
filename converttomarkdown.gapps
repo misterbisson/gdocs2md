@@ -13,10 +13,62 @@ Usage:
     - Converted doc will be mailed to you. Subject will be "[MARKDOWN_MAKER]..."
 */
 
-function ConvertToMarkdown() {
-  var numChildren = DocumentApp.getActiveDocument().getActiveSection().getNumChildren();
+/**
+ * Creates a menu entry in the Google Docs UI when the document is opened.
+ *
+ * @param {object} e The event parameter for a simple onOpen trigger. To
+ *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
+ *     running in, inspect e.authMode.
+ */
+function onOpen(e) {
+  DocumentApp.getUi().createAddonMenu()
+      .addItem('Export this document’s markdown and PDF to email', 'ConvertToMarkdown')
+      .addItem('Export another document’s markdown and PDF to email', 'ConvertOtherDoc')
+      .addToUi();
+}
+
+/**
+ * Runs when the add-on is installed.
+ *
+ * @param {object} e The event parameter for a simple onInstall trigger. To
+ *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
+ *     running in, inspect e.authMode. (In practice, onInstall triggers always
+ *     run in AuthMode.FULL, but onOpen triggers may be AuthMode.LIMITED or
+ *     AuthMode.NONE.)
+ */
+function onInstall(e) {
+  onOpen(e);
+}
+
+function ConvertThisDoc() {
+  var mydoc = DocumentApp.getActiveDocument();
+  ConvertToMarkdown(mydoc);
+}
+
+function ConvertOtherDoc() {
+  var mydoc = findDoc();
+  if (mydoc) {
+    // do something with the target document
+    ConvertToMarkdown(mydoc);
+  } else {
+    var ui = DocumentApp.getUi();
+    var pro = ui.prompt(pros, 'URL:', ui.ButtonSet.OK);
+  }
+}
+
+// Returns the target document based on its URL
+function findDoc() {
+  var ui = DocumentApp.getUi();
+  var pro = ui.prompt('Please enter a valid Google Docs URL', 'URL:', ui.ButtonSet.OK);
+  var url = pro.getResponseText();
+  return DocumentApp.openByUrl(url);
+}
+
+function ConvertToMarkdown(mydoc) {
+  var numChildren = mydoc.getActiveSection().getNumChildren();
   var text = "";
   var inSrc = false;
+  mydoc
   var inClass = false;
   var globalImageCounter = 0;
   var globalListCounters = {};
@@ -27,7 +79,7 @@ function ConvertToMarkdown() {
   
   // Walk through all the child elements of the doc.
   for (var i = 0; i < numChildren; i++) {
-    var child = DocumentApp.getActiveDocument().getActiveSection().getChild(i);
+    var child = mydoc.getActiveSection().getChild(i);
     var result = processParagraph(i, child, inSrc, globalImageCounter, globalListCounters);
     globalImageCounter += (result && result.images) ? result.images.length : 0;
     if (result!==null) {
@@ -72,16 +124,16 @@ function ConvertToMarkdown() {
   }
   
   // attach as both markdown and PDF
-  attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".md",
+  attachments.push({"fileName":mydoc.getName()+".md",
                     "mimeType": "text/plain", "content": text});
-  attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".pdf",
+  attachments.push({"fileName":mydoc.getName()+".pdf",
                     "mimeType": "application/pdf",
-                    "content": DocumentApp.getActiveDocument().getAs('application/pdf').getBytes()});
+                    "content": mydoc.getAs('application/pdf').getBytes()});
   
   MailApp.sendEmail(Session.getActiveUser().getEmail(), 
-                    "[MARKDOWN_MAKER] "+DocumentApp.getActiveDocument().getName(), 
+                    "[MARKDOWN_MAKER] "+mydoc.getName(), 
                     "Your converted document is attached as both a Markdown and PDF file"+
-                    "\n\nThese documents were converted from "+DocumentApp.getActiveDocument().getUrl()+
+                    "\n\nThese documents were converted from "+mydoc.getUrl()+
                     "\n\nDon't know how to use the format options? See http://github.com/mangini/gdocs2md\n\n",
                     { "attachments": attachments });
 }
@@ -347,3 +399,4 @@ function processTextElement(inSrc, txt) {
   }
   return pOut;
 }
+
