@@ -1,13 +1,16 @@
 /*
 Usage: 
-  Adding this script to your doc: 
-    - Tools > Script Manager > New
-    - Select "Blank Project", then paste this code in and save.
+  Adding this script to your doc:
+    - Open your Google Docs document
+    - Tools > Script editor
+    - Delete the default empty function myFunction() and paste the contents of this file into the code editor
+    - Save
   Running the script:
-    - Tools > Script Manager
-    - Select "ConvertToMarkdown" function.
-    - Click Run button.
-    - Converted doc will be mailed to you. Subject will be "[MARKDOWN_MAKER]...".
+    - Tools > Script editor
+    - Select the code file with the "ConvertToMarkdown" function
+    - In the taskbar, click "Select function" and select "ConvertToMarkdown"
+    - Click the Run button (first run will require you to authorize it)
+    - Converted doc will be mailed to you. Subject will be "[MARKDOWN_MAKER]..."
 */
 
 function ConvertToMarkdown() {
