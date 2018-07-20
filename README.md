@@ -17,7 +17,7 @@ A simple Google Apps script to convert a properly formatted Google Drive Documen
     * Select the code file with the `ConvertToMarkdown` function
     * In the taskbar, click "Select function" and select `ConvertToMarkdown`
     * Click the Run button (first run will require you to authorize it)
-    * Converted doc will be mailed to you. Subject will be "[MARKDOWN_MAKER]..."
+    * The converted doc will be mailed to you (along with a PDF version); the subject will be "[MARKDOWN_MAKER]..."
 
 ## Interpreted formats
   * Text:
