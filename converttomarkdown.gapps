@@ -145,6 +145,8 @@ function processParagraph(index, element, inSrc, imageCounter, listCounters) {
         "bytes": element.getChild(i).getBlob().getBytes(), 
         "type": contentType, 
         "name": name});
+    } else if (t === DocumentApp.ElementType.INLINE_DRAWING) {
+      textElements.push('(ConvertToMarkdown note: INLINE_DRAWING could not be converted)');
     } else if (t === DocumentApp.ElementType.PAGE_BREAK) {
       // ignore
     } else if (t === DocumentApp.ElementType.HORIZONTAL_RULE) {
